@@ -50,7 +50,6 @@ async function fetchMovie() {
             Language: ${data.Language || "-"}<br>
              Plot: ${data.Plot || "-"}<br>
           `
-
     }
     catch (err) {
         showError(err.message || "something went wrong");
