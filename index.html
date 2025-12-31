@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>movie-finder</title>
-    <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Movie Finder</title>
+<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <div class="card">
-        <h1>movie finder</h1>
-        <input placeholder="search a movie" id="moviename">
-        <button id="fetchbtn" onclick="fetchMovie()">find movie</button>
-        <div id="error"></div>
-        <div class="align">
-                <img id="poster" alt="movie poster">
-        </div>
-        <div id="info"></div>
+
+<div class="card">
+    <h1>Movie Finder</h1>
+
+    <div class="search-box">
+        <input id="moviename" placeholder="Search movie..." />
+        <button onclick="fetchMovie()">Search</button>
     </div>
 
-    <script src="./script.js"></script>
-</body>
+    <div id="error"></div>
+    <div class="loader" id="loader"></div>
 
+    <div class="poster">
+        <img id="poster" alt="Movie Poster" />
+    </div>
+
+    <div id="info"></div>
+</div>
+<script src="./script.js"></script>
+</body>
 </html>

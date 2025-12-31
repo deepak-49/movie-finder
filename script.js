@@ -60,69 +60,63 @@
 
 // input.addEventListener("keydown", (e) => e.key === "Enter" && fetchMovie());
 
+
 const API_KEY = "2f4cff71";
 const input = document.getElementById("moviename");
-const button = document.getElementById("fetchbtn");
-const info = document.getElementById("info");
 const poster = document.getElementById("poster");
+const info = document.getElementById("info");
 const errorEl = document.getElementById("error");
+const loader = document.getElementById("loader");
 
-const showError = (msg) => {
-    errorEl.textContent = msg;
-};
-
-const clearUI = () => {
+function resetUI() {
     errorEl.textContent = "";
     poster.style.display = "none";
-    info.innerHTML = "";
-};
+    info.style.display = "none";
+}
 
 async function fetchMovie() {
-    clearUI();
-    const name = input.value.trim();
-    if (!name) {
-        showError("Please enter a movie name");
+    resetUI();
+    const movie = input.value.trim();
+    if (!movie) {
+        errorEl.textContent = "Please enter a movie name";
         return;
     }
-    const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(name)}&plot=short`;
+
+    loader.style.display = "block";
 
     try {
-        const res = await fetch(url, { cache: "no-store" });
-        const text = await res.text();
+        const res = await fetch(
+            `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(movie)}`
+        );
+        const data = await res.json();
 
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch {
-            throw new Error("Bad response from server");
-        }
-        
+        loader.style.display = "none";
+
         if (data.Response === "False") {
-            throw new Error(data.Error || "Movie not found");
+            errorEl.textContent = data.Error;
+            return;
         }
-        
-        if (data.Poster && data.Poster !== "N/A") {
+
+        if (data.Poster !== "N/A") {
             poster.src = data.Poster;
             poster.style.display = "block";
-        } else {
-            poster.style.display = "none";
         }
 
         info.innerHTML = `
-            <strong>${data.Title || "-"}</strong> (${data.Year || "-"})<br>
-            IMDB: ${data.imdbRating || "-"}<br>
-            Genre: ${data.Genre || "-"}<br>
-            Language: ${data.Language || "-"}<br>
-            Plot: ${data.Plot || "-"}<br>
+            <strong>${data.Title} (${data.Year})</strong>
+            ⭐ IMDb: ${data.imdbRating}<br>
+            🎭 Genre: ${data.Genre}<br>
+            🌐 Language: ${data.Language}<br>
+            📝 Plot: ${data.Plot}
         `;
-    } catch (err) {
-        showError(err.message || "Something went wrong");
-        console.error(err);
+        info.style.display = "block";
+
+    } catch {
+        loader.style.display = "none";
+        errorEl.textContent = "Something went wrong";
     }
 }
 
-input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        fetchMovie();
-    }
+input.addEventListener("keydown", e => {
+    if (e.key === "Enter") fetchMovie();
 });
